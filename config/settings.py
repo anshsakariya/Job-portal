@@ -132,6 +132,7 @@ STORAGES = {
 # This forces Django to look into your specific 'job/static' folder
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'job', 'static'),
+    BASE_DIR / 'job' / 'static',
 ]
 
 LOGIN_REDIRECT_URL = 'user_dashboard'  
