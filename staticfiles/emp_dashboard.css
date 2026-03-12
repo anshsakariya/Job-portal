@@ -1,0 +1,124 @@
+body{
+    font-family: Arial;
+    background:#f2f2f2;
+}
+
+.container{
+    width: 80%;
+    margin: auto;
+}
+
+h1{
+    text-align:center;
+    margin-top:20px;
+}
+
+.form-box{
+    background:white;
+    padding:20px;
+    margin-top:20px;
+    border-radius:8px;
+    box-shadow:0 0 10px #ccc;
+}
+
+.form-box input,
+.form-box textarea{
+    width:100%;
+    padding:10px;
+    margin-top:8px;
+    margin-bottom:15px;
+    border:1px solid #ccc;
+    border-radius:5px;
+}
+
+.form-box button{
+    background:green;
+    color:white;
+    padding:10px;
+    border:none;
+    border-radius:5px;
+    width:150px;
+}
+
+.list-box{
+    background:white;
+    padding:20px;
+    margin-top:30px;
+    border-radius:8px;
+    box-shadow:0 0 10px #ccc;
+}
+
+/* TABLE UPDATE */
+table{
+    width:100%;
+    border-collapse:collapse;
+    table-layout: fixed;   /* column size fix */
+    text-align: center; 
+}
+
+th:last-child, td:last-child {
+    width: 200px; 
+}
+
+table th,
+table td{
+    border: 1px solid #ddd;
+    padding: 10px;           
+    text-align: center;
+    vertical-align: middle;
+}
+
+td.actions-cell {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Description column medium size */
+.desc{
+    max-width:260px;
+    word-wrap: break-word;
+}
+
+/* No jobs box */
+.no-jobs-container {
+    text-align: center;
+    padding: 30px;
+    border: 2px dashed #bbb;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    margin-top: 20px;
+}
+
+.no-jobs-container p {
+    color: #666;
+    font-size: 18px;
+    font-weight: bold;
+    margin: 0;
+}
+
+/* Actions buttons side-by-side */
+.actions{
+    display: flex;
+    justify-content: center;
+    align-items: center;     
+    gap: 8px;
+}
+
+.btn{
+    display: inline-block;
+    padding:10px;
+    border-radius: 4px;
+    text-decoration: none;
+    color: white;
+    font-size: 14px;
+    min-width: 70px;         
+}
+.edit-btn{
+    background-color: orange;
+}
+
+.delete-btn{
+    background-color: red;
+}
