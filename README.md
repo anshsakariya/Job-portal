@@ -162,3 +162,29 @@ Stores job posting data
  job_applications
 
 Stores job application data
+
+
+command used
+
+
+## Commands
+
+1. Create Django Project
+   python -m django startproject config .
+        
+2. Create Superuser
+   python manage.py createsuperuser
+   Username: Jobseeker
+   Email: jobseeker@gmail.com
+   Password: Jobseeker@123
+
+3. Make Migrations
+   python manage.py makemigrations
+
+4. Apply Migrations
+   python manage.py migrate
+
+5. Run Server
+   python manage.py runserver
+
+Open in browser: http://127.0.0.1:8000/

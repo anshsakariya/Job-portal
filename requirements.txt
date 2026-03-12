@@ -1,33 +1,5 @@
-## Definition
-
-This project helps users find and apply for jobs and allows employers to post jobs.
-
-## Environment
-
-- Python version: 3.14.3
-- Django version: 6.0.2
-- Database: SQLite
-- Frontend: HTML, CSS
-- Backend : Python , Django
-
-## Commands
-
-1. Create Django Project
-   python -m django startproject config .
-        
-2. Create Superuser
-   python manage.py createsuperuser
-   Username: Jobseeker
-   Email: jobseeker@gmail.com
-   Password: Jobseeker@123
-
-3. Make Migrations
-   python manage.py makemigrations
-
-4. Apply Migrations
-   python manage.py migrate
-
-5. Run Server
-   python manage.py runserver
-
-Open in browser: http://127.0.0.1:8000/
+asgiref==3.7.2
+Django==5.0.2
+gunicorn==21.2.0
+sqlparse==0.4.4
+tzdata==2023.4
