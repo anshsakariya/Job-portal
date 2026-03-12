@@ -1,0 +1,66 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+<title>User Dashboard</title>
+
+<link rel="stylesheet" href="{% static 'user_dashboard.css' %}">
+<link rel="icon" href="data:,">
+
+</head>
+
+<body>
+
+<div class="container">
+
+<!-- Welcome -->
+<div class="welcome">
+<h2>Welcome to Job Seeker</h2>
+</div>
+
+<!-- Search Filters -->
+<div class="search-box">
+
+<form method="GET">
+
+<input type="text" name="location" placeholder="Location">
+<input type="text" name="company" placeholder="Company">
+<input type="text" name="category" placeholder="Category">
+
+<button type="submit">Search Jobs</button>
+
+</form>
+
+</div>
+
+{% if jobs %}
+    {% for job in jobs %}
+    <div class="job-card">
+
+        <h3>{{ job.title }}</h3>
+
+        <div class="job-details">
+            <p><span class="label">Job Title :</span> {{ job.title }}</p>
+            <p><span class="label">Description :</span> {{ job.description }}</p>
+            <p><span class="label">Location :</span> {{ job.location }}</p>
+            <p><span class="label">category :</span> {{ job.category }}</p>
+            <p><span class="label">company :</span> {{ job.company }}</p>
+            <p><span class="label">Salary :</span> ₹{{ job.salary }}</p>
+        </div>
+
+        <div class="apply-area">
+            <a href="{% url 'Apply_job' job.id %}" class="apply-btn">
+                Apply Now
+            </a>
+        </div>
+
+    </div>
+    {% endfor %}
+{% else %}
+<p style="text-align:center;">No Jobs Available</p>
+{% endif %}
+
+</div>
+
+</body>
+</html>

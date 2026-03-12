@@ -1,0 +1,27 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="gu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JobSeeker</title>
+        <link rel="stylesheet" href="{% static 'welcome.css' %}"></head>
+</head>
+<body>
+    <div class="main-container">
+        <nav class="navbar">
+            <div class="logo">JOB<span>SEEKER</span></div>
+            <div class="auth-buttons">
+
+           <a href="{% url 'register' %}">Register</a>
+           <a href="{% url 'login' %}">Login</a>
+            </div>
+        </nav>
+        <main class="hero-content">
+            <h1>Welcome to JobSeeker Platform</h1>
+            
+        </main>
+    </div>
+</body>
+</html>
+

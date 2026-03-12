@@ -1,0 +1,81 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Employee Dashboard</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'emp_dashboard.css' %}?v=1.3">
+</head>
+<body>
+
+<div class="container">
+    <h1>Employee Dashboard</h1>
+
+    <div class="form-box">
+        <h2>Post New Job</h2>
+        <form method="POST">
+            {% csrf_token %} 
+            <label>Job Title</label>
+            <input type="text" name="title" required>
+
+            <label>Description</label>
+            <textarea name="description" required></textarea>
+
+            <label>Salary</label>
+            <input type="text" name="salary" required>
+
+            <label>category</label>
+            <input type="text" name="category" required>
+
+            <label>company</label>
+            <input type="text" name="company" required>
+
+            <label>Location</label>
+            <input type="text" name="location" required>
+
+            <button type="submit">Post Job</button>
+        </form>
+    </div>
+
+    <div class="list-box">
+        <h2>All Jobs</h2>
+        {% if jobs %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Job Title</th>
+                    <th>Description</th>
+                    <th>Salary</th>
+                    <th>category</th>
+                    <th>company</th>
+                    <th>Location</th>
+                    <th>Actions</th>
+                    
+                </tr>
+            </thead>
+            <tbody>
+                {% for job in jobs %}
+                <tr>
+                    <td>{{job.title }}</td>
+                    <td>{{job.description}}
+                    <td>{{job.salary }}</td>
+                    <td>{{job.category}}</td>
+                    <td>{{job.company}}</td>
+                    <td>{{job.location }}</td>
+                    <td class="actions">
+                          <a href="{% url 'edit_job' job.id %}" class="btn edit-btn">Edit</a>
+                          <a href="{% url 'delete_job' job.id %}" class="btn delete-btn">Delete</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <div class="no-jobs-container">
+            <p>No posted jobs available.</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+</body>
+</html>
