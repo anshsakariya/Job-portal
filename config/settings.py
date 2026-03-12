@@ -121,6 +121,9 @@ USE_TZ = False
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATICFILES_DIRS = [
+    BASE_DIR / 'static', 
+]
 
 STORAGES = {
     "staticfiles": {
@@ -128,11 +131,6 @@ STORAGES = {
     },
 }
 
-
-# This forces Django to look into your specific 'job/static' folder
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'job', 'static'),
-]
 
 LOGIN_REDIRECT_URL = 'user_dashboard'  
 LOGOUT_REDIRECT_URL = 'login'
