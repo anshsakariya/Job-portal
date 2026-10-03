@@ -19,8 +19,8 @@ venv/
 .venv/
 ENV/
 
-# Static files (generated)
-staticfiles/
+# Static files
+# (staticfiles included)
 
 # IDE
 .vscode/

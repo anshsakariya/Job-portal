@@ -1,0 +1,90 @@
+
+body{
+    font-family: Arial;
+    background:#f4f6f9;
+    margin:0;
+}
+
+.container{
+    width:90%;
+    margin:auto;
+    margin-top:20px;
+}
+
+/* Welcome */
+.welcome{
+    text-align:center;
+    background:#007bff;
+    color:white;
+    padding:12px;
+    border-radius:8px;
+}
+
+/* Search box (white removed) */
+.search-box{
+    background:transparent;
+    padding:10px;
+    border-radius:0;
+    margin:20px auto;
+    box-shadow:none;
+    width:fit-content;
+    text-align:center;
+}
+
+.search-box form{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:10px;
+    flex-wrap:wrap;
+}
+
+.search-box input{
+    padding:10px;
+    border-radius:8px;
+    border:1px solid #ddd;
+    width:180px;
+    background:white;
+}
+
+.search-box button{
+    padding:10px 20px;
+    background:#28a745;
+    border:none;
+    color:white;
+    border-radius:8px;
+    cursor:pointer;
+}
+
+/* Job card */
+.job-card{
+    background:white;
+    padding:18px;
+    margin:15px 0;
+    border-radius:12px;
+    box-shadow:0 2px 8px rgba(0,0,0,0.1);
+}
+
+.job-details{
+    margin-top:10px;
+    line-height:1.8;
+}
+
+.label{
+    font-weight:bold;
+}
+
+/* Apply button */
+.apply-area{
+    text-align:center;
+    margin-top:15px;
+}
+
+.apply-btn{
+    background:#007bff;
+    color:white;
+    padding:10px 25px;
+    text-decoration:none;
+    border-radius:6px;
+    font-size:15px;
+}
