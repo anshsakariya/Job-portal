@@ -1,3 +1,4 @@
+python manage.py migrate
 python manage.py runserver
 
 = > register no data delete krva mate 
