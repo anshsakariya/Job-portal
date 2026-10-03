@@ -1,0 +1,69 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Job - {{ job.title }}</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'edit_job.css' %}?v=2.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+
+<div class="container">
+    <div class="edit-header">
+        <h1><i class="fa-solid fa-pen-to-square" style="color:#818cf8;"></i> Edit Job Listing</h1>
+        <a href="{% url 'emp_dashboard' %}" class="cancel-btn" style="flex:0; padding:10px 20px;">
+            <i class="fa-solid fa-arrow-left"></i> Back to Dashboard
+        </a>
+    </div>
+
+    <div class="form-box">
+        <form method="POST">
+            {% csrf_token %} 
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>Job Title *</label>
+                    <input type="text" name="title" value="{{ job.title }}" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Company Name</label>
+                    <input type="text" name="company" value="{{ job.company|default:'' }}">
+                </div>
+
+                <div class="form-group">
+                    <label>Category *</label>
+                    <input type="text" name="category" value="{{ job.category }}" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Offered Salary / Compensation *</label>
+                    <input type="text" name="salary" value="{{ job.salary }}" required>
+                </div>
+
+                <div class="form-group full-width">
+                    <label>Location *</label>
+                    <input type="text" name="location" value="{{ job.location }}" required>
+                </div>
+
+                <div class="form-group full-width">
+                    <label>Job Description & Requirements *</label>
+                    <textarea name="description" required>{{ job.description }}</textarea>
+                </div>
+            </div>
+
+            <div class="btn-row">
+                <button type="submit" class="save-btn">
+                    <i class="fa-solid fa-floppy-disk"></i> Save Changes & Update
+                </button>
+                <a href="{% url 'emp_dashboard' %}" class="cancel-btn">
+                    Cancel
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+</body>
+</html>

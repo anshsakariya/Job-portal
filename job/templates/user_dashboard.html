@@ -1,0 +1,273 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Candidate Portal - JobPortal</title>
+    <link rel="stylesheet" href="{% static 'user_dashboard.css' %}?v=3.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        /* Candidate-specific Indigo/Cyan accent */
+        :root {
+            --primary: #6366f1;
+            --accent-gradient: linear-gradient(135deg, #4f46e5 0%, #6366f1 50%, #818cf8 100%);
+        }
+        .employer-notice {
+            background: rgba(245,158,11,0.1);
+            border: 1px solid rgba(245,158,11,0.3);
+            border-radius: 12px;
+            padding: 14px 18px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #fbbf24;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        .employer-notice a {
+            margin-left: auto;
+            background: rgba(245,158,11,0.15);
+            border: 1px solid rgba(245,158,11,0.3);
+            color: #fbbf24;
+            padding: 6px 14px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+        .employer-notice a:hover { background: rgba(245,158,11,0.25); }
+    </style>
+</head>
+<body>
+
+<!-- Dashboard Nav -->
+<header class="dash-nav">
+    <div class="nav-container">
+        <a href="{% url 'user_dashboard' %}" class="brand-logo">
+            <div class="brand-icon">
+                <i class="fa-solid fa-briefcase"></i>
+            </div>
+            JOB<span>SEEKER</span>
+        </a>
+
+        <div class="nav-actions">
+            <a href="{% url 'user_dashboard' %}" class="nav-link-btn active">
+                <i class="fa-solid fa-magnifying-glass"></i> Explore Jobs
+            </a>
+            <a href="{% url 'my_applications' %}" class="nav-link-btn">
+                <i class="fa-solid fa-file-signature"></i> My Applications
+                {% if my_applications_count %}
+                    <span style="background:var(--primary); color:white; font-size:11px; padding:2px 6px; border-radius:999px; font-weight:700;">{{ my_applications_count }}</span>
+                {% endif %}
+            </a>
+            {% if is_employer %}
+            <a href="{% url 'emp_dashboard' %}" class="nav-link-btn" style="border-color: rgba(16, 185, 129, 0.4); color: #34d399; background: rgba(16, 185, 129, 0.1);">
+                <i class="fa-solid fa-building"></i> Employer Console
+            </a>
+            <a href="{% url 'post_job' %}" class="nav-link-btn" style="border-color: rgba(99, 102, 241, 0.4); color: #a5b4fc; background: rgba(99, 102, 241, 0.15);">
+                <i class="fa-solid fa-plus-circle"></i> Post Job
+            </a>
+            {% endif %}
+
+            <!-- Active User Session Chip -->
+            <div class="session-chip" title="Active Session: {{ session_data.email }}">
+                <div class="session-avatar">
+                    {{ session_data.username|make_list|first|upper }}
+                </div>
+                <span>{{ session_data.username }}</span>
+                <span class="session-badge-pill">
+                    <span class="pulse-dot"></span>
+                    {{ session_data.role }}
+                </span>
+            </div>
+
+            <a href="{% url 'logout' %}" class="logout-btn" title="End Session & Logout">
+                <i class="fa-solid fa-arrow-right-from-bracket"></i> Logout
+            </a>
+        </div>
+    </div>
+</header>
+
+<div class="container">
+    <!-- Messages / Toasts -->
+    {% if messages %}
+    <div class="message-container">
+        {% for message in messages %}
+            <div class="message {% if message.tags %}{{ message.tags }}{% endif %}">
+                <i class="fa-solid {% if message.tags == 'error' %}fa-circle-exclamation{% elif message.tags == 'success' %}fa-circle-check{% else %}fa-circle-info{% endif %}"></i>
+                <span>{{ message }}</span>
+            </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Welcome & Session Header Banner -->
+    <div class="dash-header">
+        <div class="header-title">
+            <h1>Discover Your Next Opportunity</h1>
+            <p>Welcome, <strong style="color:white;">{{ session_data.username }}</strong>! Browse available job openings and apply with 1-click session autofill.</p>
+        </div>
+        <div>
+            <span class="session-badge-pill" style="padding: 8px 16px; font-size: 13px;">
+                <span class="pulse-dot"></span>
+                Logged in at {{ session_data.login_time }}
+            </span>
+        </div>
+    </div>
+
+    <!-- Stats Overview -->
+    <div class="stats-row">
+        <div class="stat-box">
+            <div class="stat-icon">
+                <i class="fa-solid fa-briefcase"></i>
+            </div>
+            <div class="stat-info">
+                <div class="num">{{ total_jobs_count }}</div>
+                <div class="lbl">Available Openings</div>
+            </div>
+        </div>
+
+        <div class="stat-box">
+            <div class="stat-icon" style="background:rgba(16, 185, 129, 0.15); color:#34d399;">
+                <i class="fa-solid fa-file-circle-check"></i>
+            </div>
+            <div class="stat-info">
+                <div class="num">{{ my_applications_count }}</div>
+                <div class="lbl">Applied by You</div>
+            </div>
+        </div>
+
+        <div class="stat-box">
+            <div class="stat-icon" style="background:rgba(236, 72, 153, 0.15); color:#f472b6;">
+                <i class="fa-solid fa-bolt-lightning"></i>
+            </div>
+            <div class="stat-info">
+                <div class="num">1-Click</div>
+                <div class="lbl">Session Auto-Fill Ready</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Search & Filter Card -->
+    <div class="search-filter-card">
+        <form method="GET" action="{% url 'user_dashboard' %}" class="search-form">
+            <input 
+                type="text" 
+                name="q" 
+                class="filter-input" 
+                placeholder="Job title, keywords, or skills..." 
+                value="{{ search_query }}"
+            >
+            <input 
+                type="text" 
+                name="location" 
+                class="filter-input" 
+                placeholder="Location (e.g. Remote, Surat)" 
+                value="{{ location }}"
+            >
+            <input 
+                type="text" 
+                name="company" 
+                class="filter-input" 
+                placeholder="Company name" 
+                value="{{ company }}"
+            >
+            <button type="submit" class="search-btn">
+                <i class="fa-solid fa-magnifying-glass"></i> Search
+            </button>
+            {% if search_query or location or company or selected_category %}
+                <a href="{% url 'user_dashboard' %}" class="clear-btn" title="Reset Filters">
+                    <i class="fa-solid fa-rotate-left"></i>
+                </a>
+            {% endif %}
+        </form>
+
+        <!-- Category Filter Pills -->
+        <div class="category-pills">
+            <a href="{% url 'user_dashboard' %}" class="cat-pill {% if not selected_category %}active{% endif %}">
+                <i class="fa-solid fa-layer-group"></i> All Categories
+            </a>
+            {% for cat in available_categories %}
+                {% if cat %}
+                <a href="{% url 'user_dashboard' %}?category={{ cat }}" class="cat-pill {% if selected_category|lower == cat|lower %}active{% endif %}">
+                    {{ cat }}
+                </a>
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Jobs Grid -->
+    <div class="jobs-grid">
+        {% if jobs %}
+            {% for job in jobs %}
+            <div class="job-card">
+                <div>
+                    <div class="job-top-bar">
+                        <div class="job-company-badge">
+                            <div class="company-logo-placeholder">
+                                {{ job.company|default:job.title|make_list|first|upper }}
+                            </div>
+                            <div>
+                                <div class="company-name">{{ job.company|default:"Verified Employer" }}</div>
+                                <span class="job-category-tag">{{ job.category|default:"General" }}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h3 class="job-title">{{ job.title }}</h3>
+                    <p class="job-desc">{{ job.description }}</p>
+
+                    <div class="job-meta-list">
+                        <div class="meta-chip location">
+                            <i class="fa-solid fa-location-dot"></i>
+                            <span>{{ job.location|default:"Anywhere" }}</span>
+                        </div>
+                        <div class="meta-chip salary">
+                            <i class="fa-solid fa-indian-rupee-sign"></i>
+                            <span>{{ job.salary }}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="job-card-actions">
+                    <span class="posted-date">
+                        <i class="fa-regular fa-clock"></i> {{ job.created_at|timesince }} ago
+                    </span>
+
+                    {% if is_employer %}
+                        <span style="font-size:12px; color:#64748b; display:flex; align-items:center; gap:5px; font-style:italic;">
+                            <i class="fa-solid fa-eye"></i> View Only
+                        </span>
+                    {% elif job.id in applied_job_ids %}
+                        <span class="applied-badge">
+                            <i class="fa-solid fa-circle-check"></i> Applied
+                        </span>
+                    {% else %}
+                        <a href="{% url 'Apply_job' job.id %}" class="apply-btn">
+                            Apply Now <i class="fa-solid fa-arrow-right"></i>
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="empty-state">
+                <div class="empty-icon">
+                    <i class="fa-solid fa-folder-open"></i>
+                </div>
+                <h3>No Matching Job Listings Found</h3>
+                <p>Try refining your search terms, clearing filters, or checking back soon.</p>
+                <a href="{% url 'user_dashboard' %}" class="apply-btn" style="display:inline-flex;">
+                    <i class="fa-solid fa-rotate-left"></i> View All Openings
+                </a>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+</body>
+</html>

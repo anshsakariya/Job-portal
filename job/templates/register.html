@@ -1,0 +1,219 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Account - JobPortal</title>
+    <link rel="stylesheet" href="{% static 'login_registration.css' %}?v=3.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        .role-picker { display: flex; gap: 14px; margin-bottom: 22px; }
+        .role-card {
+            flex: 1; padding: 16px 12px; border: 2px solid rgba(255,255,255,0.1);
+            border-radius: 14px; background: rgba(255,255,255,0.04);
+            cursor: pointer; text-align: center; transition: all 0.25s ease;
+            position: relative;
+        }
+        .role-card input[type="radio"] { position: absolute; opacity: 0; width: 0; height: 0; }
+        .role-card .role-icon { font-size: 26px; margin-bottom: 8px; display: block; }
+        .role-card .role-title { font-size: 13px; font-weight: 700; color: #cbd5e1; display: block; }
+        .role-card .role-desc { font-size: 11px; color: #64748b; margin-top: 4px; display: block; }
+        .role-card.active-candidate {
+            border-color: #6366f1; background: rgba(99,102,241,0.12);
+            box-shadow: 0 0 0 3px rgba(99,102,241,0.2);
+        }
+        .role-card.active-candidate .role-icon { color: #818cf8; }
+        .role-card.active-candidate .role-title { color: #a5b4fc; }
+        .role-card.active-employer {
+            border-color: #10b981; background: rgba(16,185,129,0.1);
+            box-shadow: 0 0 0 3px rgba(16,185,129,0.2);
+        }
+        .role-card.active-employer .role-icon { color: #34d399; }
+        .role-card.active-employer .role-title { color: #6ee7b7; }
+        .role-card:hover { transform: translateY(-2px); }
+        .submit-btn.employer-mode { background: linear-gradient(135deg, #059669 0%, #10b981 50%, #34d399 100%); }
+    </style>
+</head>
+<body>
+
+<div class="auth-card">
+    <div class="brand-header">
+        <div class="brand-badge">
+            <i class="fa-solid fa-user-plus"></i>
+        </div>
+        <h2>Create Your Account</h2>
+        <p>One account gives you full access to both <strong>Job Seeking</strong> and <strong>Employer Hiring</strong></p>
+    </div>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="message {% if message.tags %}{{ message.tags }}{% endif %}">
+                <i class="fa-solid {% if message.tags == 'error' %}fa-circle-exclamation{% else %}fa-circle-check{% endif %}"></i>
+                <span>{{ message }}</span>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <form method="POST" action="{% url 'register' %}" id="registerForm">
+        {% csrf_token %}
+
+        <!-- ROLE SELECTION CARDS -->
+        <div style="margin-bottom:6px;">
+            <label class="form-label" style="font-size:12px; text-transform:uppercase; letter-spacing:1px; color:#64748b;">I am joining as a...</label>
+        </div>
+        <div class="role-picker">
+            <label class="role-card {% if selected_role == 'candidate' or not selected_role %}active-candidate{% endif %}" id="card-candidate" onclick="selectRole('candidate')">
+                <input type="radio" name="role" value="candidate" {% if selected_role == 'candidate' or not selected_role %}checked{% endif %}>
+                <span class="role-icon"><i class="fa-solid fa-briefcase-blank"></i></span>
+                <span class="role-title">Job Seeker</span>
+                <span class="role-desc">Find & apply for jobs</span>
+            </label>
+            <label class="role-card {% if selected_role == 'employer' %}active-employer{% endif %}" id="card-employer" onclick="selectRole('employer')">
+                <input type="radio" name="role" value="employer" {% if selected_role == 'employer' %}checked{% endif %}>
+                <span class="role-icon"><i class="fa-solid fa-building"></i></span>
+                <span class="role-title">Employer / Recruiter</span>
+                <span class="role-desc">Post jobs & hire talent</span>
+            </label>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">Full Name / Username</label>
+            <div class="input-wrapper">
+                <i class="fa-solid fa-user"></i>
+                <input 
+                    type="text" 
+                    name="username" 
+                    class="input-field" 
+                    placeholder="Enter your name (e.g. Rahul Sharma)" 
+                    value="{{ username|default:'' }}" 
+                    required 
+                    autofocus
+                >
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">Email Address <span style="font-size:11px; color:#34d399;">(Unique)</span></label>
+            <div class="input-wrapper">
+                <i class="fa-solid fa-envelope"></i>
+                <input 
+                    type="email" 
+                    name="email" 
+                    class="input-field" 
+                    placeholder="name@example.com" 
+                    value="{{ email|default:'' }}" 
+                    required
+                >
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">Mobile Number <span style="font-size:11px; color:#34d399;">(Unique 10-Digit)</span></label>
+            <div class="input-wrapper">
+                <i class="fa-solid fa-phone"></i>
+                <input 
+                    type="tel" 
+                    name="phone" 
+                    class="input-field" 
+                    placeholder="10-digit mobile number" 
+                    value="{{ phone|default:'' }}" 
+                    minlength="10" 
+                    maxlength="10" 
+                    pattern="[0-9]{10}" 
+                    title="Enter exactly 10 digit phone number" 
+                    required
+                >
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">Password</label>
+            <div class="input-wrapper">
+                <i class="fa-solid fa-lock"></i>
+                <input 
+                    type="password" 
+                    id="regPassword" 
+                    name="password" 
+                    class="input-field" 
+                    placeholder="Create a strong password" 
+                    required
+                >
+                <button type="button" class="password-toggle" onclick="toggleRegPassword()">
+                    <i id="regEyeIcon" class="fa-solid fa-eye"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">Confirm Password</label>
+            <div class="input-wrapper">
+                <i class="fa-solid fa-shield-halved"></i>
+                <input 
+                    type="password" 
+                    name="confirm_password" 
+                    class="input-field" 
+                    placeholder="Re-enter password" 
+                    required
+                >
+            </div>
+        </div>
+
+        <button type="submit" class="submit-btn {% if selected_role == 'employer' %}employer-mode{% endif %}" id="submitBtn" style="margin-top: 24px;">
+            <span id="btnText">{% if selected_role == 'employer' %}Create Employer Account{% else %}Create Candidate Account{% endif %}</span>
+            <i class="fa-solid fa-arrow-right"></i>
+        </button>
+
+        <div class="auth-switch">
+            Already have an account? 
+            <a href="{% url 'login' %}"><strong>Login Here</strong></a>
+            <div>
+                <a href="{% url 'welcome' %}" class="back-home">
+                    <i class="fa-solid fa-house"></i> Back to Homepage
+                </a>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script>
+function selectRole(role) {
+    const candidateCard = document.getElementById('card-candidate');
+    const employerCard = document.getElementById('card-employer');
+    const submitBtn = document.getElementById('submitBtn');
+    const btnText = document.getElementById('btnText');
+
+    if (role === 'candidate') {
+        candidateCard.classList.add('active-candidate');
+        candidateCard.classList.remove('active-employer');
+        employerCard.classList.remove('active-employer');
+        employerCard.classList.remove('active-candidate');
+        submitBtn.classList.remove('employer-mode');
+        btnText.textContent = 'Create Candidate Account';
+    } else {
+        employerCard.classList.add('active-employer');
+        employerCard.classList.remove('active-candidate');
+        candidateCard.classList.remove('active-candidate');
+        candidateCard.classList.remove('active-employer');
+        submitBtn.classList.add('employer-mode');
+        btnText.textContent = 'Create Employer Account';
+    }
+}
+
+function toggleRegPassword() {
+    const passwordInput = document.getElementById('regPassword');
+    const eyeIcon = document.getElementById('regEyeIcon');
+    if (passwordInput.type === 'password') {
+        passwordInput.type = 'text';
+        eyeIcon.classList.remove('fa-eye');
+        eyeIcon.classList.add('fa-eye-slash');
+    } else {
+        passwordInput.type = 'password';
+        eyeIcon.classList.remove('fa-eye-slash');
+        eyeIcon.classList.add('fa-eye');
+    }
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,161 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Candidate Applications - {{ job.title }}</title>
+    <link rel="stylesheet" href="{% static 'user_dashboard.css' %}?v=2.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        .app-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .app-table th {
+            text-align: left;
+            padding: 14px 18px;
+            background: rgba(255, 255, 255, 0.04);
+            color: var(--text-muted);
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 1px solid var(--card-border);
+        }
+        .app-table td {
+            padding: 18px;
+            border-bottom: 1px solid var(--card-border);
+            font-size: 14px;
+            color: var(--text-main);
+        }
+        .app-table tr:hover td {
+            background: rgba(255, 255, 255, 0.02);
+        }
+        .contact-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            background: rgba(99, 102, 241, 0.12);
+            color: #818cf8;
+            border: 1px solid rgba(99, 102, 241, 0.25);
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+        .contact-btn:hover {
+            background: var(--primary);
+            color: white;
+        }
+        .table-responsive {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            overflow: hidden;
+            backdrop-filter: blur(16px);
+        }
+    </style>
+</head>
+<body>
+
+<!-- Dashboard Nav -->
+<header class="dash-nav">
+    <div class="nav-container">
+        <a href="{% url 'emp_dashboard' %}" class="brand-logo">
+            <div class="brand-icon">
+                <i class="fa-solid fa-briefcase"></i>
+            </div>
+            JOB<span>SEEKER</span>
+        </a>
+
+        <div class="nav-actions">
+            <a href="{% url 'emp_dashboard' %}" class="nav-link-btn active">
+                <i class="fa-solid fa-arrow-left"></i> Back to Employer Hub
+            </a>
+            <a href="{% url 'user_dashboard' %}" class="nav-link-btn">
+                <i class="fa-solid fa-magnifying-glass"></i> Job Seeker View
+            </a>
+
+            <div class="session-chip">
+                <div class="session-avatar">
+                    {{ user.username|make_list|first|upper }}
+                </div>
+                <span>{{ user.username }}</span>
+            </div>
+
+            <a href="{% url 'logout' %}" class="logout-btn">
+                <i class="fa-solid fa-arrow-right-from-bracket"></i> Logout
+            </a>
+        </div>
+    </div>
+</header>
+
+<div class="container">
+    <div class="dash-header">
+        <div class="header-title">
+            <h1>Candidates for: <span style="color: #818cf8;">{{ job.title }}</span></h1>
+            <p>{{ job.company|default:"Company" }} • {{ job.location }} • Total Applicants: <strong style="color:white;">{{ total_count }}</strong></p>
+        </div>
+        <a href="{% url 'emp_dashboard' %}" class="apply-btn">
+            <i class="fa-solid fa-arrow-left"></i> Employer Dashboard
+        </a>
+    </div>
+
+    <div class="table-responsive">
+        {% if applicants %}
+        <table class="app-table">
+            <thead>
+                <tr>
+                    <th>Candidate Name</th>
+                    <th>Email Address</th>
+                    <th>Mobile Number</th>
+                    <th>Location</th>
+                    <th>Qualification & University</th>
+                    <th>Score / Year</th>
+                    <th>Quick Contact</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for cand in applicants %}
+                <tr>
+                    <td><strong style="color:white; font-size:15px;">{{ cand.name }}</strong></td>
+                    <td>{{ cand.email }}</td>
+                    <td>{{ cand.phone }}</td>
+                    <td>{{ cand.city }}{% if cand.state %}, {{ cand.state }}{% endif %}</td>
+                    <td>
+                        <strong style="color:white;">{{ cand.qualification }}</strong>
+                        <div style="font-size:12px; color:var(--text-muted);">{{ cand.college }}</div>
+                    </td>
+                    <td>
+                        <div>Passing: <strong>{{ cand.passing_year|default:"N/A" }}</strong></div>
+                        <div style="color:#34d399; font-weight:700;">{{ cand.percentage|default:"-" }}</div>
+                    </td>
+                    <td>
+                        <a href="mailto:{{ cand.email }}" class="contact-btn">
+                            <i class="fa-solid fa-envelope"></i> Email
+                        </a>
+                        <a href="tel:{{ cand.phone }}" class="contact-btn" style="margin-left: 4px;">
+                            <i class="fa-solid fa-phone"></i> Call
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <div class="empty-state">
+            <div class="empty-icon">
+                <i class="fa-solid fa-user-group"></i>
+            </div>
+            <h3>No Candidates Have Applied Yet</h3>
+            <p>Applications for this job listing will appear here as soon as candidates submit them.</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+</body>
+</html>

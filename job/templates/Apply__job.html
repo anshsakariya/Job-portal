@@ -1,0 +1,208 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apply for {{ job.title }} - JobSeeker</title>
+    <link rel="stylesheet" href="{% static 'Apply_job.css' %}?v=2.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+
+<div class="apply-container">
+    <div class="apply-header">
+        <h2>Submit Your Application</h2>
+        <p style="color: var(--text-muted); font-size: 14px;">Complete the form below to apply directly to the employer</p>
+    </div>
+
+    <!-- Job Info Preview Box -->
+    <div class="job-preview-box">
+        <div>
+            <div class="job-preview-title">{{ job.title }}</div>
+            <div class="job-preview-company">
+                <i class="fa-solid fa-building"></i> {{ job.company|default:"Verified Employer" }} • 
+                <i class="fa-solid fa-location-dot"></i> {{ job.location }}
+            </div>
+        </div>
+        <div style="text-align: right;">
+            <div style="font-size: 11px; color: var(--text-muted); text-transform: uppercase;">Offered Salary</div>
+            <strong style="color: #34d399; font-size: 16px;">₹{{ job.salary }}</strong>
+        </div>
+    </div>
+
+    <!-- Session Auto-fill Banner -->
+    <div class="session-autofill-banner">
+        <i class="fa-solid fa-bolt-lightning" style="font-size: 15px;"></i>
+        <span><strong>Smart Auto-Fill:</strong> Profile details have been pre-filled from your active user session.</span>
+    </div>
+
+    {% if already_applied %}
+    <div style="background: rgba(99, 102, 241, 0.15); border: 1px solid rgba(99, 102, 241, 0.3); color: #a5b4fc; padding: 10px 14px; border-radius: 10px; font-size: 13px; margin-bottom: 20px;">
+        <i class="fa-solid fa-circle-info"></i> Note: You have already applied for this role. Submitting again will update your application record.
+    </div>
+    {% endif %}
+
+    <form action="{% url 'Apply_job' job.id %}" method="POST">
+        {% csrf_token %}
+
+        <div class="form-section-title">
+            <i class="fa-solid fa-user"></i> Candidate Details
+        </div>
+
+        <div class="form-grid">
+            <div class="form-group">
+                <label>Full Name</label>
+                <div class="input-with-icon">
+                    <i class="fa-solid fa-user"></i>
+                    <input 
+                        type="text" 
+                        id="name" 
+                        name="u_name" 
+                        placeholder="Your full name" 
+                        value="{{ initial.name }}" 
+                        required
+                    >
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Email Address</label>
+                <div class="input-with-icon">
+                    <i class="fa-solid fa-envelope"></i>
+                    <input 
+                        type="email" 
+                        id="email" 
+                        name="email" 
+                        placeholder="your.email@example.com" 
+                        value="{{ initial.email }}" 
+                        required
+                    >
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Mobile Number</label>
+                <div class="input-with-icon">
+                    <i class="fa-solid fa-phone"></i>
+                    <input 
+                        type="tel" 
+                        name="phone" 
+                        placeholder="10-digit mobile number" 
+                        value="{{ initial.phone }}" 
+                        minlength="10" 
+                        maxlength="10" 
+                        pattern="[0-9]{10}" 
+                        title="Enter exactly 10 digit phone number" 
+                        required
+                    >
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>City</label>
+                <div class="input-with-icon">
+                    <i class="fa-solid fa-city"></i>
+                    <input 
+                        type="text" 
+                        name="city" 
+                        placeholder="City of residence" 
+                        value="{{ initial.city }}" 
+                        required
+                    >
+                </div>
+            </div>
+
+            <div class="form-group full-width">
+                <label>State / Region</label>
+                <div class="input-with-icon">
+                    <i class="fa-solid fa-map-pin"></i>
+                    <input 
+                        type="text" 
+                        name="state" 
+                        placeholder="State" 
+                        value="{{ initial.state }}" 
+                        required
+                    >
+                </div>
+            </div>
+        </div>
+
+        <div class="form-section-title">
+            <i class="fa-solid fa-graduation-cap"></i> Academic & Education Background
+        </div>
+
+        <div class="form-grid">
+            <div class="form-group">
+                <label>Highest Qualification</label>
+                <div class="input-with-icon">
+                    <i class="fa-solid fa-certificate"></i>
+                    <input 
+                        type="text" 
+                        name="qualification" 
+                        placeholder="e.g. B.Tech Computer Science, MBA" 
+                        value="{{ initial.qualification }}" 
+                        required
+                    >
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>College / University</label>
+                <div class="input-with-icon">
+                    <i class="fa-solid fa-school"></i>
+                    <input 
+                        type="text" 
+                        name="college" 
+                        placeholder="College name" 
+                        value="{{ initial.college }}" 
+                        required
+                    >
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Passing Year</label>
+                <div class="input-with-icon">
+                    <i class="fa-solid fa-calendar"></i>
+                    <input 
+                        type="number" 
+                        name="passing_year" 
+                        placeholder="e.g. 2024" 
+                        min="1990" 
+                        max="2030" 
+                        value="{{ initial.passing_year }}" 
+                        required
+                    >
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Percentage / CGPA</label>
+                <div class="input-with-icon">
+                    <i class="fa-solid fa-percent"></i>
+                    <input 
+                        type="text" 
+                        name="percentage" 
+                        placeholder="e.g. 85% or 8.5 CGPA" 
+                        value="{{ initial.percentage }}" 
+                        required
+                    >
+                </div>
+            </div>
+        </div>
+
+        <div class="action-buttons">
+            <button type="submit" class="submit-btn">
+                <i class="fa-solid fa-paper-plane"></i> Submit Application & Save Profile
+            </button>
+            <a href="{% url 'user_dashboard' %}" class="cancel-btn">
+                Cancel
+            </a>
+        </div>
+    </form>
+</div>
+
+</body>
+</html>
+
